@@ -1,23 +1,24 @@
-# 🫁 Lung Cancer Risk Prediction (Deep Learning)
+# 🫁 Lung Cancer Prediction (Artificial Neural Network - ANN)
 
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-v2.0+-EE4C2C.svg?logo=pytorch)](https://pytorch.org/)
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-v1.3+-orange.svg)](https://scikit-learn.org/)
 [![Streamlit App](https://img.shields.io/badge/Streamlit-Interactive%20UI-FF4B4B.svg)](https://streamlit.io/)
 [![Pytest](https://img.shields.io/badge/pytest-Passing-brightgreen.svg)](https://docs.pytest.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-SVenkataPadmakar%2FDL__Project2-181717.svg?logo=github)](https://github.com/SVenkataPadmakar/DL_Project2)
 
-An end-to-end, production-grade **Deep Neural Network (DNN)** project for predicting patient lung cancer risk based on demographic, lifestyle, and clinical factors.
+An end-to-end, production-grade clinical **Artificial Neural Network (ANN)** deep learning project built in **PyTorch** for binary lung cancer diagnosis and risk prediction based on patient demographics, lifestyle habits, and clinical indicators.
 
 ---
 
 ## 🌟 Highlights & Features
-- **Deep Architecture**: Multi-Layer Perceptron (`128 -> 64 -> 32 -> Sigmoid`) with ReLU non-linearities and Adam optimizer.
-- **Leakage-Free Preprocessing**: `ColumnTransformer` with `StandardScaler` for continuous features (`Age`, `Anxiety`, `Peer_Pressure`) and `OneHotEncoder` for categorical indicators (`Smoking`, `Chronic_Disease`), fitted strictly on training data.
-- **Diagnostics & Visualizations**: Automatic confusion matrix heatmaps and loss convergence curves saved to [`visualizations/`](visualizations/).
-- **Model Serialization**: Trained model and preprocessing pipeline saved to [`saved_models/lung_cancer_model.pkl`](saved_models/lung_cancer_model.pkl).
-- **Clinical Web Studio**: Interactive Streamlit application (`app.py`) for live risk assessment and feature impact analysis.
-- **Unit & Integration Tests**: Pytest test suite in [`tests/`](tests/) validating data schema, model training, and inference.
+- **Deep ANN Architecture**: Multi-Layer PyTorch Neural Network (`Dense(128) -> Dense(64) -> Dense(32) -> Binary Output`) with ReLU activations, Adam optimization, and CrossEntropyLoss backpropagation.
+- **Leakage-Free Preprocessing**: `ColumnTransformer` with `StandardScaler` for continuous numeric features and `OneHotEncoder` for categorical factors, fitted strictly on training data.
+- **Diagnostics & Visualizations**: Automatic confusion matrix heatmaps and PyTorch epoch loss convergence curves saved to [`visualizations/`](visualizations/).
+- **Model Serialization**: Trained PyTorch ANN model artifact and preprocessing pipeline saved to [`saved_models/lung_cancer_model.pkl`](saved_models/lung_cancer_model.pkl).
+- **Interactive Web Studio**: Streamlit application (`app.py`) for clinical data exploration, interactive ANN training with hyperparameter tuning, and real-time live patient risk assessment.
+- **Automated Tests**: Pytest suite in [`tests/`](tests/) validating data schema, PyTorch ANN training, and predictions.
 
 ---
 
@@ -25,11 +26,11 @@ An end-to-end, production-grade **Deep Neural Network (DNN)** project for predic
 
 ```
 DL_Project2/
-├── lung_cancer.csv                   # Patient dataset
-├── train.py                          # Deep Learning training pipeline
+├── lung_cancer.csv                   # Dataset
+├── train.py                          # PyTorch ANN training pipeline
 ├── app.py                            # Interactive Streamlit Web Studio
-├── model_utils.py                    # Preprocessing, plotting, and model persistence
-├── requirements.txt                  # Python dependencies
+├── model_utils.py                    # PyTorch ANN classifier, preprocessing & plotting
+├── requirements.txt                  # Python dependencies (includes torch)
 ├── README.md                         # Documentation
 ├── LICENSE                           # MIT License
 ├── .gitignore                        # Git ignore rules
@@ -56,7 +57,7 @@ cd DL_Project2
 pip install -r requirements.txt
 ```
 
-### 3. Train the Deep Neural Network
+### 3. Train the PyTorch Artificial Neural Network (ANN)
 ```bash
 python train.py
 ```

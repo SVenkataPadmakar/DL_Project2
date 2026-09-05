@@ -5,20 +5,31 @@ from pathlib import Path
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+PROJECT_DIR = Path(__file__).resolve().parent
+if str(PROJECT_DIR) not in sys.path:
+    sys.path.insert(0, str(PROJECT_DIR))
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
-from model_utils import build_preprocessor, save_model, plot_classification_results
 
-DATASET_PATH = Path(__file__).resolve().parent / "lung_cancer.csv"
+try:
+    from Project2_Lung_Cancer_Prediction.model_utils import (
+        build_preprocessor, save_model, plot_classification_results, PyTorchANNClassifier
+    )
+except ImportError:
+    from model_utils import (
+        build_preprocessor, save_model, plot_classification_results, PyTorchANNClassifier
+    )
+
+DATASET_PATH = PROJECT_DIR / "lung_cancer.csv"
 
 
 def train_model(csv_path=DATASET_PATH):
     print("=" * 60)
-    print(" [+] Project 2: Training Deep Neural Network for Lung Cancer Prediction")
+    print(" [+] Project 2: Training PyTorch Artificial Neural Network (ANN) for Lung Cancer Prediction")
     print("=" * 60)
     
     df = pd.read_csv(csv_path)
@@ -43,25 +54,24 @@ def train_model(csv_path=DATASET_PATH):
     X_train_proc = preprocessor.fit_transform(X_train)
     X_test_proc = preprocessor.transform(X_test)
     
-    # Deep Neural Network: (128 -> 64 -> 32)
-    model = MLPClassifier(
+    # PyTorch Artificial Neural Network: (128 -> 64 -> 32)
+    model = PyTorchANNClassifier(
         hidden_layer_sizes=(128, 64, 32),
         activation="relu",
-        solver="adam",
-        alpha=0.001,
-        batch_size=32,
-        learning_rate_init=0.001,
+        lr=0.001,
         max_iter=300,
-        random_state=42,
+        batch_size=32,
+        weight_decay=0.0001,
         early_stopping=True,
-        n_iter_no_change=15,
-        verbose=False
+        patience=15,
+        random_state=42
     )
     
     model.fit(X_train_proc, y_train)
     
     y_pred = model.predict(X_test_proc)
-    y_prob = model.predict_proba(X_test_proc)[:, 1] if len(class_names) == 2 else model.predict_proba(X_test_proc)
+    y_probs = model.predict_proba(X_test_proc)
+    y_prob_positive = y_probs[:, 1] if len(class_names) == 2 else y_probs
     acc = accuracy_score(y_test, y_pred)
     
     print(f"Accuracy: {acc:.4f} ({acc * 100:.2f}%)\n")
@@ -72,15 +82,15 @@ def train_model(csv_path=DATASET_PATH):
     
     if len(class_names) == 2:
         try:
-            auc = roc_auc_score(y_test, y_prob)
+            auc = roc_auc_score(y_test, y_prob_positive)
             print(f"ROC-AUC Score: {auc:.4f}")
         except Exception:
             pass
             
     # Save artifacts
     plot_classification_results(
-        y_test, y_pred, y_prob, class_names,
-        title="Lung Cancer Prediction",
+        y_test, y_pred, y_prob_positive, class_names,
+        title="Lung Cancer Prediction (PyTorch ANN)",
         filename="lung_cancer_evaluation.png",
         loss_curve=model.loss_curve_
     )
